@@ -1,0 +1,70 @@
+<template>
+
+   <lightning-card>
+        <!--Header-->
+        <h3 slot="title">
+            <lightning-icon icon-name="standard:panel_detail" size="small"></lightning-icon>
+            &nbsp; Case Details
+        </h3>
+        <!--Actions-->
+        <lightning-button-icon icon-name="utility:edit" slot="actions" variant="neutral" onclick={HandleEditCase} data-name="edit" if:true={Disabled}></lightning-button-icon>
+        <!--Form-->
+        <lightning-record-edit-form record-id={CaseNumber} object-api-name="Case" onsuccess={HandleFormSuccess}>
+            <div class="slds-box">
+
+                <!--Layout 1-->
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input-field field-name="CaseNumber" disabled={Disabled}></lightning-input-field>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input-field field-name="OwnerId" disabled={Disabled}></lightning-input-field>
+                    </div>
+                </div>
+
+                <!--Layout 2-->
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input-field field-name="Status" disabled={Disabled}></lightning-input-field>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input-field field-name="Priority" disabled={Disabled}></lightning-input-field>
+                    </div>
+                </div>
+
+                <!--Layout 3-->
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input-field field-name="CreatedDate" disabled={Disabled}></lightning-input-field>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input-field field-name="LastModifiedDate" disabled={Disabled}></lightning-input-field>
+                    </div>
+                </div>
+
+                <!--Layout 4-->
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input-field field-name="CreatedById" disabled={Disabled}></lightning-input-field>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input-field field-name="LastModifiedById" disabled={Disabled}></lightning-input-field>
+                    </div>
+                </div>
+
+                <!--Layout 5-->
+                <div>
+                    <lightning-input-field field-name="Subject" disabled={Disabled}></lightning-input-field>
+                    <lightning-input-field field-name="Description" disabled={Disabled} class="custom-textarea"></lightning-input-field>
+                </div>
+
+                <div class="form-actions">
+                    <lightning-button label="Cancel" variant="destructive-text" onclick={HandleEditCase} data-name="cancel" if:false={Disabled} class="form-action-btn"></lightning-button>
+                    <lightning-button class="slds-m-top_small" variant="brand" type="submit" label="Save" if:false={Disabled}></lightning-button>
+                </div>
+                
+            </div>
+        </lightning-record-edit-form>
+    </lightning-card>
+
+</template>

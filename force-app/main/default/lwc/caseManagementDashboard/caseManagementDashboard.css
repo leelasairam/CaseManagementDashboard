@@ -1,0 +1,22 @@
+.nav{
+    margin-bottom: 0.5rem;
+    background-color: #e1e1e1;
+}
+
+.input-button-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjust spacing */
+}
+
+.pagination{
+    text-align: center;
+}
+
+.total-cases{
+    margin-bottom: 0.5rem;
+}
+
+.case-count{
+    color: green;
+}

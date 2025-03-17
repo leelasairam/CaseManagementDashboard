@@ -1,0 +1,59 @@
+<template>
+    <lightning-modal-header label={title}></lightning-modal-header>
+    <!--Modal body-->
+    <lightning-modal-body>
+        <template for:each={InpArray} for:item="i">
+            <div key={i} class="filter-row">
+    
+                <lightning-layout>
+                    <!--Row Number-->
+                    <lightning-layout-item padding="around-small">
+                        <button class="row-number" value={i} disabled>{i}</button>
+                    </lightning-layout-item>
+                    <!--Field-->
+                    <lightning-layout-item padding="around-small">
+                        <select name="Field" class="field">
+                            <option value="Subject">Subject</option>
+                            <option value="Status">Status</option>
+                            <option value="Priority">Priority</option>
+                            <option value="Owner.Name">Owner</option>
+                            <option value="CreatedDate">Created</option>
+                            </select>
+                    </lightning-layout-item>
+                    <!--Operator-->
+                    <lightning-layout-item padding="around-small">
+                        <select name="operator" class="operator">
+                            <option value="=">Equal</option>
+                            <option value="!=">Not Equal</option>
+                            <option value="like">Contains</option>
+                            <option value=">">Grater then</option>
+                            <option value="<>">Less then</option>
+                            </select>
+                    </lightning-layout-item>
+                    <!--value-->
+                    <lightning-layout-item padding="around-small">
+                        <input name="value" class="value"/>
+                    </lightning-layout-item>
+                    <!--remove button-->
+                    <lightning-layout-item padding="around-small">
+                        <lightning-button-icon size="small" icon-name="utility:close" onclick={removeRow} data-id={i}></lightning-button-icon>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </template>
+        <!--Add row-->
+        <lightning-button icon-name="utility:new" label="Add" variant="Success" onclick={AddFilterRow} class="AddBtn"></lightning-button>
+        <!--custom logic-->
+        <div class="custom-logic-container">
+            <input type="checkbox" onchange={HandleCustomLogic} class="checkbox" checked={ShowCustomLogic}/>
+            <b>Custom Logic?</b> <br/>
+            <input if:true={ShowCustomLogic} placeholder="1 AND (2 OR 3) AND 4" class="logic"/>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <input if:false={FilterUpdateInfo.IsUpdate} class="InpName" placeholder="Filter name..."/>
+        <lightning-button if:true={FilterUpdateInfo.IsUpdate} icon-name="utility:delete" label="Delete" onclick={deleteSavedFilter} variant="destruction-text"></lightning-button>
+        <lightning-button class="InpGap" variant="neutral" icon-name="utility:save" label="Save & Run" onclick={handleConfirm} data-name="save"></lightning-button>
+        <lightning-button class="InpGap" variant="brand" label="Run" onclick={handleConfirm} data-name="run"></lightning-button>
+    </lightning-modal-footer>
+</template>

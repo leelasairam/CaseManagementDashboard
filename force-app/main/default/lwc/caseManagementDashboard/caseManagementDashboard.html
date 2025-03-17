@@ -1,0 +1,57 @@
+<template>
+    <lightning-layout class="nav">
+        <!--Filters-->
+        <lightning-layout-item padding="around-small" size="4">
+            <div class="input-button-container">
+                <lightning-icon icon-name="standard:action_list_component" alternative-text="Filetes" title="Filter"></lightning-icon>
+                <lightning-combobox variant="label-hidden" value={SelectedFilter} options={UserFilters} onchange={HandleFilterChange}></lightning-combobox>
+            </div>
+        </lightning-layout-item>
+        <!--Search-->
+        <lightning-layout-item padding="around-small" size="4">
+            <div>
+                <div class="input-button-container">
+                    <lightning-input  size="small" placeholder="Subject (or) Case Number" variant="label-hidden" class="search-case-inp"></lightning-input>
+                    <lightning-button label="Search" variant="brand" onclick={handleCaseSearch}></lightning-button>
+                </div>
+            </div>
+        </lightning-layout-item>
+        <!--Actions-->
+        <lightning-layout-item padding="around-small" flexibility="auto">
+            <div>
+                <lightning-button-group>
+                    <lightning-button title="Refresh" icon-name="utility:refresh" onclick={RefreshList}></lightning-button>
+                    <lightning-button label="Close" icon-name="utility:success" data-btnname="close" onclick={handleRowSelectionAction}></lightning-button>
+                    <lightning-button label="Export" icon-name="utility:download" onclick={DownloadCsv}></lightning-button>
+                    <lightning-button label="Filter" icon-name="utility:filterList" onclick={handleFilterOpenModal} data-btn="newfilter"></lightning-button>
+                    <lightning-button-menu alternative-text="Show menu" variant="border-filled">
+                        <lightning-menu-item label="Edit Filter" value="EditFilter" onclick={handleFilterOpenModal} data-btn="editfilter"></lightning-menu-item>
+                        <lightning-menu-item label="Menu Item Two" value="item2"></lightning-menu-item>
+                        <lightning-menu-item label="Menu Item Three" value="item3"></lightning-menu-item>
+                    </lightning-button-menu>
+                </lightning-button-group>
+            </div>
+        </lightning-layout-item>
+        
+    </lightning-layout>
+
+    <!--Data table-->
+    <div>
+        <lightning-datatable key-field="id" data={Cases} columns={columns} onrowaction={HandleRowActions} onrowselection={handleRowSelection}></lightning-datatable>
+    </div>
+
+    <!--Pagination-->
+    <lightning-card>
+        <div class="pagination">
+            <div class="total-cases">Total Cases : <b class="case-count">{totalRecs}</b></div>
+            <lightning-button label="Prev" onclick={handlePagination} disabled={disablePrevBtn} data-btn="prev"></lightning-button>
+            &nbsp;<b>Page :</b><lightning-badge label={page}></lightning-badge>&nbsp;
+            <lightning-button label="Next" onclick={handlePagination} disabled={disableNextBtn} data-btn="next"></lightning-button>
+        </div>
+    </lightning-card>
+
+    <!--Spinner-->
+    <div class="exampleHolder" if:true={load}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </div>
+</template>

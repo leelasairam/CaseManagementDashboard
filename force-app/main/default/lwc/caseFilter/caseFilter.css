@@ -1,0 +1,21 @@
+.InpGap{
+    margin-left: 0.3rem;
+}
+
+.InpName{
+    height: 30px;
+}
+
+.AddBtn{
+    margin-left: 0.7rem;
+}
+
+.custom-logic-container{
+    margin-left: 0.7rem;
+    margin-top: 3rem;
+}
+
+.checkbox{
+    width: 20px;
+    height: 15px;;
+}
