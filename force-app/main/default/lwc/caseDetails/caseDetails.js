@@ -3,6 +3,7 @@ import { CurrentPageReference } from 'lightning/navigation';
 
 export default class CaseDetails extends LightningElement {
     @track CaseNumber;
+    load = true;
     fields = ['Subject','CaseNumber','CreatedById','Description'];
     @track Disabled = true;
     @wire(CurrentPageReference)
@@ -11,6 +12,11 @@ export default class CaseDetails extends LightningElement {
             this.CaseNumber = currentPageRef.state.c__caseNumber;
         }
     }
+
+    handleLoading(){
+        this.load = !this.load;
+    }
+
     
     HandleEditCase(event){
         const btn = event.target.dataset.name;
@@ -30,5 +36,6 @@ export default class CaseDetails extends LightningElement {
     }
     HandleFormSuccess(){
         this.Disabled = true;
+        this.handleLoading();
     }
 }

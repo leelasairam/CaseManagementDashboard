@@ -52,7 +52,7 @@
     </lightning-modal-body>
     <lightning-modal-footer>
         <input if:false={FilterUpdateInfo.IsUpdate} class="InpName" placeholder="Filter name..."/>
-        <lightning-button if:true={FilterUpdateInfo.IsUpdate} icon-name="utility:delete" label="Delete" onclick={deleteSavedFilter} variant="destruction-text"></lightning-button>
+        <lightning-button if:true={FilterUpdateInfo.IsUpdate} icon-name="utility:delete" label="Delete" onclick={deleteSavedFilter} variant="destructive-text"></lightning-button>
         <lightning-button class="InpGap" variant="neutral" icon-name="utility:save" label="Save & Run" onclick={handleConfirm} data-name="save"></lightning-button>
         <lightning-button class="InpGap" variant="brand" label="Run" onclick={handleConfirm} data-name="run"></lightning-button>
     </lightning-modal-footer>

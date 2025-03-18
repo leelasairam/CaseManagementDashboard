@@ -4,12 +4,12 @@
         <!--Header-->
         <h3 slot="title">
             <lightning-icon icon-name="standard:panel_detail" size="small"></lightning-icon>
-            &nbsp; Case Details
+            &nbsp; Case Details:
         </h3>
         <!--Actions-->
         <lightning-button-icon icon-name="utility:edit" slot="actions" variant="neutral" onclick={HandleEditCase} data-name="edit" if:true={Disabled}></lightning-button-icon>
         <!--Form-->
-        <lightning-record-edit-form record-id={CaseNumber} object-api-name="Case" onsuccess={HandleFormSuccess}>
+        <lightning-record-edit-form record-id={CaseNumber} object-api-name="Case" onload={handleLoading} onsuccess={HandleFormSuccess}>
             <div class="slds-box">
 
                 <!--Layout 1-->
@@ -66,5 +66,10 @@
             </div>
         </lightning-record-edit-form>
     </lightning-card>
+
+    <!--Spinner-->
+    <div if:true={load}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </div>
 
 </template>
