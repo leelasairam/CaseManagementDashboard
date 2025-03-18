@@ -68,7 +68,7 @@ export default class CaseManagementDashboard extends NavigationMixin(LightningEl
                 this.totalRecs = result.count;
             }
             const TempCases = result.records.map(ele => ({
-                ...ele, // Create a new object
+                ...ele, // Create a new object1
                 format: ele.Priority !== 'High' ? 'brand-outline' : 'destructive-text'
             }));
             this.Cases = TempCases;
