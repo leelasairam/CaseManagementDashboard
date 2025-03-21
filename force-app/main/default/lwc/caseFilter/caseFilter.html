@@ -45,7 +45,7 @@
         <lightning-button icon-name="utility:new" label="Add" variant="Success" onclick={AddFilterRow} class="AddBtn"></lightning-button>
         <!--custom logic-->
         <div class="custom-logic-container">
-            <input type="checkbox" onchange={HandleCustomLogic} class="checkbox" checked={ShowCustomLogic}/>
+            <input type="checkbox" onchange={HandleCustomLogic} class="checkbox" checked={ShowCustomLogic} disabled=true/>
             <b>Custom Logic?</b> <br/>
             <input if:true={ShowCustomLogic} placeholder="1 AND (2 OR 3) AND 4" class="logic"/>
         </div>

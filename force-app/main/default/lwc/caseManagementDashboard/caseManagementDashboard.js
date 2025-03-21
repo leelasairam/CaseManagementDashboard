@@ -107,7 +107,7 @@ export default class CaseManagementDashboard extends NavigationMixin(LightningEl
                 size: 'large', // 'small', 'medium', 'large'
                 title: btn==='newfilter' ? 'New Filter' : 'Edit Filter',
                 UID:this.UserId,
-                FilterUpdateInfo: btn==='newfilter' ? {IsUpdate : false,filters:[],filterId:'',customLogic:null} : {IsUpdate : true,filters:JSON.parse(this.SelectedFilter.split("#")[2]),filterId:this.SelectedFilter.split("#")[1],customLogic:this.SelectedFilter.split("#")[3]},
+                FilterUpdateInfo: btn==='newfilter' ? {IsUpdate : false,filters:[],filterId:'',customLogic:null} : {IsUpdate : true,filters:JSON.parse(this.SelectedFilter.split("#")[2]),filterId:this.SelectedFilter.split("#")[1],customLogic:this.SelectedFilter.split("#")[3] || ''},
     
             });
             console.log('Modal Result:', result);
