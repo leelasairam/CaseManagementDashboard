@@ -183,7 +183,7 @@ export default class MyModal extends LightningModal {
         else if(btn === 'save'){
             const FiletrName = this.template.querySelector('.InpName')?.value || '';
             if(!FiletrName && !this.FilterUpdateInfo.IsUpdate){
-                this.showAlert('Error','Please enter the filter name','error');
+                this.showAlert('Duplicate','Please enter the filter name','error');
             }
             else{
                 const FilterId = !this.FilterUpdateInfo.IsUpdate ? null : this.FilterUpdateInfo.filterId;
