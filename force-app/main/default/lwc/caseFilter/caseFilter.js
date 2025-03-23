@@ -101,15 +101,27 @@ export default class MyModal extends LightningModal {
             this.showAlert('Invalid operator',`'${fieldDetails}' field does not support '${operatorDetails}' operator. Valid operator has been set automatically.`,'info');
             filterDetails.querySelector('.operator').value = '=';
         }
+        if(fieldDetails === 'CreatedDate' || fieldDetails === 'LastModifiedDate'){
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so add 1
+            const day = String(today.getDate()).padStart(2, '0');
+
+            filterDetails.querySelector('.value').value  = `${year}-${month}-${day}`;
+        }
 
     }
     
 
     async handleConfirm(event) {
         let CustomLogic = this.template.querySelector(".logic")?.value.toUpperCase() || '';
-        /*if(this.ShowCustomLogic && (CustomLogic === null || CustomLogic === '' || CustomLogic === undefined)){
-           alert('Please enter custom logic');
-        }*/
+        if(CustomLogic){
+            CustomLogic = CustomLogic.replace(/AND/g, '&').replace(/OR/g, '|');
+            CustomLogic = CustomLogic.replace(/\s+/g, '');
+            CustomLogic = CustomLogic.split('').join(' ');
+            CustomLogic = CustomLogic.replace(/&/g, 'AND').replace(/\|/g, 'OR');
+            console.log(CustomLogic);
+        }
         const btn = event.target.dataset.name;
         const rows = this.template.querySelectorAll('.filter-row');
         let selectedValues = [];
@@ -130,11 +142,12 @@ export default class MyModal extends LightningModal {
             DefaultLogic += j+1!=InputCount ? `${i.rownumber} AND ` : `${i.rownumber}`;
         });
         selectedValues.forEach((i,j)=>{
-            if(i.field!=='CreatedDate' && i.value!=='null'){
+            i.value = i.value.toLowerCase()!=='null' ? i.value : '';
+            if(i.field!=='CreatedDate' && i.field!=='LastModifiedDate'){
                 FilterQuery[i.rownumber] = i.operator !== 'like' ? `${i.field} ${i.operator} '${i.value}'` : `${i.field} ${i.operator} '%${i.value}%'`;
             }
             else{
-                FilterQuery[i.rownumber] = i.operator !== 'like' ? `${i.field} ${i.operator} ${i.value}` : `${i.field} ${i.operator} ${i.value}'`;
+                FilterQuery[i.rownumber] = `day_only(${i.field}) ${i.operator} ${i.value}`;
             }  
         })
         //validation start
@@ -181,7 +194,7 @@ export default class MyModal extends LightningModal {
                     console.log('saved',result);
                 })
                 .catch(error=>{
-                    this.showAlert('Error',`Filter not created ${error}`,'error');
+                    this.showAlert('Error',`Filter ran successfully but not saved : [${error.body.message}]`,'info');
                 })
                 this.close(FinalQuery);
             }
