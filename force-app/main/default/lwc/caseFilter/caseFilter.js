@@ -153,7 +153,7 @@ export default class MyModal extends LightningModal {
         //validation start
         const regex = /^(\d+|AND|OR|\(|\)|\s)*$/;
         if(this.ShowCustomLogic && CustomLogic){
-            const cFilterLogic = CustomLogic.match(/\d+/g).map(Number).sort();
+            const cFilterLogic = CustomLogic.match(/\d+/g)?.map(Number).sort() || [];
             const cRowNumbers = selectedValues.map(i=>parseInt(i.rownumber)).sort();
             let IsMatch = true;
             if(cFilterLogic.length == cRowNumbers.length && regex.test(CustomLogic)){
