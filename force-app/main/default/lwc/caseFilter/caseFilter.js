@@ -1,7 +1,9 @@
 import { LightningElement, api, track } from 'lwc';
 import LightningModal from 'lightning/modal';
-import CreateCaseFilter from '@salesforce/apex/CaseManagementClass.CreateCaseFilter';	
+import CreateCaseFilter from '@salesforce/apex/CaseManagementClass.CreateCaseFilter';
+import DeleteCaseFilter from '@salesforce/apex/CaseManagementClass.DeleteCaseFilter';	
 import LightningAlert from 'lightning/alert';
+import LightningConfirm from 'lightning/confirm';
 
 export default class MyModal extends LightningModal {
     @api title = 'Confirmation';
@@ -21,13 +23,23 @@ export default class MyModal extends LightningModal {
         });
     }
 
+    async showConfirm(label,msg,theme) {
+        const result = await LightningConfirm.open({
+            message: msg,
+            variant: 'header',
+            label: label,
+            theme : theme
+        });
+        return result;
+    }
+
     handleCancel() {
         this.close('cancel');
     }
 
-    handleConfirm() {
+    /*handleConfirm() {
         this.close('confirm');
-    }
+    }*/
 
     AddFilterRow(){
         console.log('clciked');
@@ -55,7 +67,7 @@ export default class MyModal extends LightningModal {
     }
 
     renderedCallback() {
-        console.log(this.renderedFirst);
+        console.log("Rendered",this.renderedFirst);
         if (this.FilterUpdateInfo?.IsUpdate && this.renderedFirst) {
             this.renderedFirst = false;
             const editrows = this.template.querySelectorAll('.filter-row');
@@ -65,12 +77,31 @@ export default class MyModal extends LightningModal {
                     row.querySelector('.field').value = this.FilterUpdateInfo.filters[index].field;
                     row.querySelector('.operator').value = this.FilterUpdateInfo.filters[index].operator;
                     row.querySelector('.value').value = this.FilterUpdateInfo.filters[index].value;
+                    //row.querySelector('.operator').appendChild(this.operators);
                 });
             }
             if(this.FilterUpdateInfo.customLogic !== 'undefined' && this.FilterUpdateInfo.customLogic != '' && this.FilterUpdateInfo.customLogic != null){
                 this.template.querySelector(".logic").value = this.FilterUpdateInfo?.customLogic;
             }
         }
+    }
+
+    handleOperatorChange(event){
+        //const operatorDetails = event.target.value;
+        //const FilterRow = event.target.dataset.keyid;
+        const filterDetails = event.target.closest('.filter-row');
+        const fieldDetails = filterDetails.querySelector('.field').value;
+        const operatorDetails = filterDetails.querySelector('.operator').value;
+        console.log(operatorDetails,fieldDetails);
+        if((fieldDetails === 'CreatedDate' || fieldDetails === 'LastModifiedDate') && operatorDetails === 'like'){
+            this.showAlert('Invalid operator',`'${fieldDetails}' field does not support '${operatorDetails}' operator. Valid operator has been set automatically.`,'info');
+            filterDetails.querySelector('.operator').value = '=';
+        }
+        else if((fieldDetails !== 'CreatedDate' && fieldDetails !== 'LastModifiedDate') && (operatorDetails === '<' || operatorDetails === '>')){
+            this.showAlert('Invalid operator',`'${fieldDetails}' field does not support '${operatorDetails}' operator. Valid operator has been set automatically.`,'info');
+            filterDetails.querySelector('.operator').value = '=';
+        }
+
     }
     
 
@@ -99,7 +130,12 @@ export default class MyModal extends LightningModal {
             DefaultLogic += j+1!=InputCount ? `${i.rownumber} AND ` : `${i.rownumber}`;
         });
         selectedValues.forEach((i,j)=>{
-            FilterQuery[i.rownumber] = i.operator !== 'like' ? `${i.field} ${i.operator} '${i.value}'` : `${i.field} ${i.operator} '%${i.value}%'`;  
+            if(i.field!=='CreatedDate' && i.value!=='null'){
+                FilterQuery[i.rownumber] = i.operator !== 'like' ? `${i.field} ${i.operator} '${i.value}'` : `${i.field} ${i.operator} '%${i.value}%'`;
+            }
+            else{
+                FilterQuery[i.rownumber] = i.operator !== 'like' ? `${i.field} ${i.operator} ${i.value}` : `${i.field} ${i.operator} ${i.value}'`;
+            }  
         })
         //validation start
         const regex = /^(\d+|AND|OR|\(|\)|\s)*$/;
@@ -141,10 +177,11 @@ export default class MyModal extends LightningModal {
                 console.log(CustomLogic);
                 await CreateCaseFilter({owner:this.UID,filters:JSON.stringify(selectedValues),q:FinalQuery,FName:FiletrName,logic:CustomLogic,FId:FilterId})
                 .then(result=>{
+                    this.showAlert('Filter saved and ran successfully','Refesh to view latest changes in filter list view','success');
                     console.log('saved',result);
                 })
                 .catch(error=>{
-                    console.log(error);
+                    this.showAlert('Error',`Filter not created ${error}`,'error');
                 })
                 this.close(FinalQuery);
             }
@@ -155,9 +192,18 @@ export default class MyModal extends LightningModal {
         this.ShowCustomLogic = event.target.checked;
     }
 
-    deleteSavedFilter(){
-        this.showAlert('Do you want delete this filter','','info');
-        console.log('Alert');
+    async deleteSavedFilter(){
+        const IsConfirm = await this.showConfirm('Do you want delete this filter?','','inverse');
+        if(IsConfirm){
+            try{
+                const DeleteCaseFilterRec = await DeleteCaseFilter({FId:this.FilterUpdateInfo.filterId});
+                this.showAlert('Filter deleted successfully','','success');
+                this.close('');
+            }
+            catch(error){
+                this.showAlert('Filter not deleted',error.body.message,'error');
+            }
+        }
     }
 
 }

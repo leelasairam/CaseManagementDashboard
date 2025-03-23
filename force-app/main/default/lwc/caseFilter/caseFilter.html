@@ -12,23 +12,24 @@
                     </lightning-layout-item>
                     <!--Field-->
                     <lightning-layout-item padding="around-small">
-                        <select name="Field" class="field">
+                        <select name="Field" class="field" onchange={handleOperatorChange}>
                             <option value="Subject">Subject</option>
                             <option value="Status">Status</option>
                             <option value="Priority">Priority</option>
                             <option value="Owner.Name">Owner</option>
-                            <option value="CreatedDate">Created</option>
+                            <option value="CreatedDate">Created Date</option>
+                            <option value="LastModifiedDate">LastModified Date</option>
                             </select>
                     </lightning-layout-item>
                     <!--Operator-->
                     <lightning-layout-item padding="around-small">
-                        <select name="operator" class="operator">
+                        <select name="operator" class="operator" onchange={handleOperatorChange}>
                             <option value="=">Equal</option>
                             <option value="!=">Not Equal</option>
                             <option value="like">Contains</option>
-                            <option value=">">Grater then</option>
-                            <option value="<>">Less then</option>
-                            </select>
+                            <option value=">">Greater than</option>
+                            <option value="<">Less than</option>
+                        </select>
                     </lightning-layout-item>
                     <!--value-->
                     <lightning-layout-item padding="around-small">

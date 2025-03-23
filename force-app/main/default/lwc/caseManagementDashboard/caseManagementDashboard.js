@@ -275,7 +275,7 @@ export default class CaseManagementDashboard extends NavigationMixin(LightningEl
     const toastMsg = SelectedRowsCount!=0 ? 'Please provide reason below for bulk case closure' : 'Select atleast one row';
     LightningPrompt.open({
             message: 'Bulk case closure comment (required) :',
-            label: `Do want to cslose ${SelectedRowsCount} case(s)?`,
+            label: `Do want to close ${SelectedRowsCount} case(s)?`,
             theme : 'inverse', 
             //defaultValue: 'Bulk Case Close', 
         }).then(async(result) => {
