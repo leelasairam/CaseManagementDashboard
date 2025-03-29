@@ -65,6 +65,78 @@
                 
             </div>
         </lightning-record-edit-form>
+        <br/>
+        <!--TabSet-->
+        <lightning-tabset>
+            <!--Case Comment-->
+            <lightning-tab label="Case Comments" value="comments" onactive={handleTabSelection}>
+                One Content !
+            </lightning-tab>
+            <!--Attachments-->
+            <lightning-tab label="Attachments" value="attachment" onactive={handleTabSelection}>
+                <div>
+                    <!--File Upldoad-->
+                    <div class="file-uploader">
+                        <lightning-file-upload label="Supported file types : JPEG,PNG,PDF,CSV" name="fileUploader" accept={acceptedFormats}
+                            record-id={CaseNumber} onuploadfinished={handleUploadFinished} varient="brand">
+                        </lightning-file-upload>
+                    </div>
+                    <!--Files datatable-->
+                    <lightning-datatable key-field="id" data={relatedFiles} columns={cols} onrowaction={handleRowAction} show-row-number-column hide-checkbox-column></lightning-datatable>
+                </div>
+            </lightning-tab>
+            <!--Watchlist-->
+            <lightning-tab label="Watchlist" value="watchlist" onactive={handleTabSelection}>
+                <!--Vertical Nav-->
+                
+                <div class="vertical-nav">
+                    <lightning-layout>
+                        <!--Vertical Tabs-->
+                        <lightning-layout-item size="3">
+                            <lightning-vertical-navigation onselect={handleVerticalNavSelect} selected-item={currentSelectedTab}>
+                                <lightning-vertical-navigation-section>
+                                    <lightning-vertical-navigation-item label="Watchlist Users" name="view"></lightning-vertical-navigation-item>
+                                    <lightning-vertical-navigation-item label="Add New User" name="new"></lightning-vertical-navigation-item>
+                                </lightning-vertical-navigation-section>
+                            </lightning-vertical-navigation>
+                        </lightning-layout-item>
+                        <!--Tabs content-->
+                        <lightning-layout-item padding="around-medium" size="9">
+                            <!--View-->
+                            <div if:false={isNewSubscriber}>
+                               <template for:each={watchListCurrentUsers} for:item="i">
+                                    <lightning-card key={i.Id}>
+                                        <p slot="title"> <lightning-icon size="small" icon-name="action:user"></lightning-icon> <lightning-badge label={i.Name}></lightning-badge></p>
+                                        <p class="card-text-email">Email : {i.Email}</p>
+                                        <lightning-button icon-name="utility:delete" data-uid={i.Id} data-btn="remove" onclick={handleAddNewUserToWL} slot="actions" variant="destructive"></lightning-button>
+                                    </lightning-card>
+                               </template>
+                            </div>
+                            <!--Add User-->
+                            <div if:true={isNewSubscriber}>
+                                <!--search input-->
+                                <div>
+                                    <input type="text" class="searchterm-watchlist" placeholder="Enter user name..."/>
+                                    <button onclick={handleSearchUserForWatchList}>Search</button>
+                                </div>
+                                <!--result-->
+                                <template for:each={searchResultForWL} for:item="i">
+                                    <lightning-card key={i.Id}>
+                                        <p slot="title"> <lightning-icon size="small" icon-name="action:user"></lightning-icon> <lightning-badge label={i.Name}></lightning-badge></p>
+                                        <p class="card-text-email">Email : {i.Email}</p>
+                                        <lightning-button icon-name="utility:new" data-uid={i.Id} data-btn="add" onclick={handleAddNewUserToWL} slot="actions" variant="brand"></lightning-button>
+                                    </lightning-card>
+                               </template>
+                            </div>
+
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+                
+                
+            </lightning-tab>
+        </lightning-tabset>
+
     </lightning-card>
 
     <!--Spinner-->

@@ -8,3 +8,16 @@
 .form-action-btn{
     margin-right: 0.5rem;
 }
+
+.file-uploader{
+    text-align: center;
+    margin-bottom: 0.3rem;
+}
+
+.vertical-nav{
+    min-width: 225px; border-right: 1px solid #e7e7e7;
+}
+
+.searchterm-watchlist{
+    margin-right: 0.3rem;
+}
