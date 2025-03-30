@@ -5,6 +5,9 @@ import DeleteFile  from '@salesforce/apex/CaseManagementClass.DeleteFile';
 import SearchUser  from '@salesforce/apex/CaseManagementClass.SearchUser';
 import AddNewWatchListUser  from '@salesforce/apex/CaseManagementClass.AddNewWatchListUser';
 import FetchCaseWatchlist  from '@salesforce/apex/CaseManagementClass.FetchCaseWatchlist';
+import postCaseComment  from '@salesforce/apex/CaseManagementClass.postCaseComment';
+import FetchCaseComments  from '@salesforce/apex/CaseManagementClass.FetchCaseComments';
+import deleteCaseComment  from '@salesforce/apex/CaseManagementClass.deleteCaseComment';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class CaseDetails extends LightningElement {
@@ -25,6 +28,7 @@ export default class CaseDetails extends LightningElement {
     @track Disabled = true;
     @track watchListCurrentUsers;
     @track searchResultForWL;
+    @track CaseCmtsList;
     @wire(CurrentPageReference)
     getStateParameters(currentPageRef) {
         if (currentPageRef && currentPageRef.state) {
@@ -76,7 +80,9 @@ export default class CaseDetails extends LightningElement {
     handleTabSelection(event){
         const tab = event.target.value;
         //comments
-        if(tab === 'comments'){}
+        if(tab === 'comments'){
+            this.getCaseComments();
+        }
         //attachments
         else if(tab === 'attachment'){
             this.fetchRelatedAttachments();
@@ -92,7 +98,7 @@ export default class CaseDetails extends LightningElement {
     handleUploadFinished(event) {
         console.log(this.CaseNumber);
         const uploadedFiles = event.detail.files;
-        console.log(uploadedFiles);
+        this.InsertCaseComment(`Attachment [${uploadedFiles[0].name}] has been attached to case`);
     }
 
     fetchRelatedAttachments(){
@@ -175,5 +181,57 @@ export default class CaseDetails extends LightningElement {
             console.log(error);
             this.showToast('error',error.body.message,'error');
         })
+    }
+
+    handleCasePost(){
+        const cmtPost = this.template.querySelector('.inp-comment-post').value;
+        console.log(cmtPost);
+        this.InsertCaseComment(cmtPost);
+    }
+
+    InsertCaseComment(cmt){
+        if(cmt.length>=3){
+            postCaseComment({CaseId:this.CaseNumber,Comment:cmt})
+            .then(result=>{
+                console.log(result);
+                this.showToast('Comment Added','','success');
+                this.template.querySelector('.inp-comment-post').value = '';
+                result = {...result,owner:result.CreatedBy.Name};
+                this.CaseCmtsList = [result,...this.CaseCmtsList];
+            })
+            .catch(error=>{
+                console.log(error);
+                this.showToast('Error',error.body.message,'error');
+            })
+        }
+        else{
+            this.showToast('Please endter atleast 3 charecters','','error');
+        }
+    }
+
+    getCaseComments(){
+        FetchCaseComments({CaseId:this.CaseNumber})
+        .then(result=>{
+            const tempCmts = result.map(cmt=>({
+                ...cmt,owner:cmt.CreatedBy.Name
+            }))
+            this.CaseCmtsList = tempCmts;
+        })
+    }
+
+    removeCaseCmt(event){
+        const CommnetId = event.target.dataset.cmtid;
+        if(CommnetId){
+            deleteCaseComment({CmtId:CommnetId})
+            .then(result=>{
+                console.log(result);
+                this.showToast('Comment deleted','','success');
+                this.CaseCmtsList = this.CaseCmtsList.filter(i=>i.Id!=CommnetId);
+            })
+            .catch(error=>{
+                console.log(error);
+                this.showToast('Error',error.body.message,'error');
+            })
+        }
     }
 }

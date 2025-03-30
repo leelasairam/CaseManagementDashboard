@@ -70,7 +70,30 @@
         <lightning-tabset>
             <!--Case Comment-->
             <lightning-tab label="Case Comments" value="comments" onactive={handleTabSelection}>
-                One Content !
+                <!--Comment Form-->
+                <div class="cmt-inp-container">
+                    <lightning-input-rich-text value={myVal} class="inp-comment-post"></lightning-input-rich-text>
+                    <div class="post-btn">
+                        <lightning-button label="Post" onclick={handleCasePost} variant="brand"></lightning-button>
+                    </div>
+                </div>
+                <!--comments list-->
+                <div class="comment-list">
+                    <template for:each={CaseCmtsList} for:item="i">
+                        <div key={i.Id} class="card-container">
+                            <lightning-card>
+                                <lightning-button icon-name="utility:delete" onclick={removeCaseCmt} data-cmtid={i.Id} variant="destructive-text" slot="actions"></lightning-button>
+                                <p slot="title"><lightning-icon size="small" icon-name="action:user"></lightning-icon> {i.owner}</p>
+                                <div class="cmt-card-body">
+                                    <p><b>Posted on : </b> <lightning-formatted-date-time value={i.CreatedDate} year="2-digit" month="short" day="2-digit" weekday="long"></lightning-formatted-date-time></p>
+                                    <p><b>Comment :</b></p>
+                                    <lightning-formatted-rich-text value={i.CommentBody}></lightning-formatted-rich-text>
+                                </div>
+    
+                            </lightning-card>
+                        </div>
+                    </template>
+                </div>
             </lightning-tab>
             <!--Attachments-->
             <lightning-tab label="Attachments" value="attachment" onactive={handleTabSelection}>
@@ -105,11 +128,13 @@
                             <!--View-->
                             <div if:false={isNewSubscriber}>
                                <template for:each={watchListCurrentUsers} for:item="i">
-                                    <lightning-card key={i.Id}>
-                                        <p slot="title"> <lightning-icon size="small" icon-name="action:user"></lightning-icon> <lightning-badge label={i.Name}></lightning-badge></p>
-                                        <p class="card-text-email">Email : {i.Email}</p>
-                                        <lightning-button icon-name="utility:delete" data-uid={i.Id} data-btn="remove" onclick={handleAddNewUserToWL} slot="actions" variant="destructive"></lightning-button>
-                                    </lightning-card>
+                                    <div key={i.Id} class="card-container">
+                                        <lightning-card>
+                                            <p slot="title"> <lightning-icon size="small" icon-name="action:user"></lightning-icon> <lightning-badge label={i.Name}></lightning-badge></p>
+                                            <p class="card-text-email">Email : {i.Email}</p>
+                                            <lightning-button icon-name="utility:delete" data-uid={i.Id} data-btn="remove" onclick={handleAddNewUserToWL} slot="actions" variant="destructive"></lightning-button>
+                                        </lightning-card>
+                                    </div>
                                </template>
                             </div>
                             <!--Add User-->
@@ -121,11 +146,13 @@
                                 </div>
                                 <!--result-->
                                 <template for:each={searchResultForWL} for:item="i">
-                                    <lightning-card key={i.Id}>
-                                        <p slot="title"> <lightning-icon size="small" icon-name="action:user"></lightning-icon> <lightning-badge label={i.Name}></lightning-badge></p>
-                                        <p class="card-text-email">Email : {i.Email}</p>
-                                        <lightning-button icon-name="utility:new" data-uid={i.Id} data-btn="add" onclick={handleAddNewUserToWL} slot="actions" variant="brand"></lightning-button>
-                                    </lightning-card>
+                                    <div key={i.Id} class="card-container">
+                                        <lightning-card>
+                                            <p slot="title"> <lightning-icon size="small" icon-name="action:user"></lightning-icon> <lightning-badge label={i.Name}></lightning-badge></p>
+                                            <p class="card-text-email">Email : {i.Email}</p>
+                                            <lightning-button icon-name="utility:new" data-uid={i.Id} data-btn="add" onclick={handleAddNewUserToWL} slot="actions" variant="brand"></lightning-button>
+                                        </lightning-card>
+                                    </div>
                                </template>
                             </div>
 
